@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8" />
+    <title>Via-Sacra GPS Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { margin: 0; padding: 0; font-family: -apple-system, sans-serif; background: #f4f4f4; }
+        #map { height: 100vh; width: 100vw; transition: filter 0.3s; }
+        
+        /* MODO NOITE */
+        .dark-mode #map { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); }
+        .dark-mode .progress-panel { background: #222 !important; color: white !important; border-left-color: #bb86fc !important; }
+        .dark-mode .next-text { color: #bbb !important; }
+        .dark-mode .btn-mini { background: #333 !important; color: white !important; }
+
+        .progress-panel {
+            position: absolute; top: 10px; left: 10px; right: 10px;
+            background: white; padding: 12px; border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 2000;
+            text-align: center; border-left: 5px solid #4285F4;
+            transition: all 0.3s;
+        }
+        .dist-info { font-size: 16px; font-weight: bold; color: #4285F4; }
+        .next-text { font-size: 12px; color: #666; }
+        .arrived { border-left-color: #34A853 !important; background: #e8f5e9 !important; color: #2e7d32 !important; }
+
+        .number-icon {
+            background: #4285F4; border: 2px solid white; border-radius: 50%;
+            color: white; font-weight: bold; text-align: center;
+            line-height: 26px; font-size: 13px;
+        }
+
+        .controls { position: absolute; top: 85px; right: 10px; z-index: 2000; }
+        .btn-mini { 
+            background: white; border: none; padding: 10px; border-radius: 10px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; font-weight: bold;
+        }
+        
+        .btn-start {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            z-index: 2000; padding: 18px 30px; background: #4285F4; color: white;
+            border: none; border-radius: 50px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            cursor: pointer; width: 85%; font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="progress-panel" id="p-panel">
+        <div class="dist-info" id="dist-text">📍 Pronto para começar?</div>
+        <div class="next-text" id="next-text">Clique no botão abaixo para ativar o GPS</div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-mini" onclick="document.body.classList.toggle('dark-mode')">🌙 Modo Noite</button>
+    </div>
+
+    <button class="btn-start" id="startBtn" onclick="ativarGPS()">🚀 INICIAR PERCURSO</button>
+    
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map', { zoomControl: false }).setView([41.17558, -8.63293], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        var stations = [];
+        var userMarker;
+        var currentTargetIndex = 0;
+        var watchID;
+
+        // Carregar Rota
+        fetch('rota.geojson?v=' + Date.now())
+            .then(r => r.json())
+            .then(data => {
+                L.geoJSON(data, {
+                    style: { color: '#4285F4', weight: 6, opacity: 0.6 },
+                    pointToLayer: function(f, latlng) {
+                        if (f.geometry.type === "Point") {
+                            stations.push({ latlng: latlng, nome: f.properties.nome });
+                            var label = f.properties.nome.replace(/\D/g, "");
+                            var icon = L.divIcon({ className: 'number-icon', html: label, iconSize: [26, 26] });
+                            return L.marker(latlng, { icon: icon }).bindPopup(`<b>${f.properties.nome}</b>`);
+                        }
+                    }
+                }).addTo(map);
+            });
+
+        function ativarGPS() {
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('dist-text').innerHTML = "Buscando sinal GPS...";
+            
+            // Ativa o seguimento em tempo real
+            map.locate({ 
+                setView: true, 
+                watch: true, 
+                enableHighAccuracy: true, 
+                timeout: 60000 
+            });
+        }
+
+        map.on('locationfound', function(e) {
+            // Criar ou mover o ponto azul do utilizador
+            if (!userMarker) {
+                userMarker = L.circleMarker(e.latlng, { 
+                    radius: 9, color: 'white', fillColor: '#4285F4', fillOpacity: 1, weight: 3 
+                }).addTo(map);
+            } else {
+                userMarker.setLatLng(e.latlng);
+            }
+
+            // SEGUE OS PASSOS: Faz o mapa centrar no utilizador suavemente
+            map.flyTo(e.latlng, 18, { animate: true, duration: 1 });
+
+            // Atualizar o painel de distância
+            if (stations.length > 0) {
+                var target = stations[currentTargetIndex];
+                var dist = e.latlng.distanceTo(target.latlng);
+                var panel = document.getElementById('p-panel');
+
+                if (dist < 20) { // Menos de 20 metros = Chegou
+                    document.getElementById('dist-text').innerHTML = "📍 CHEGOU!";
+                    document.getElementById('next-text').innerHTML = "Você está na " + target.nome;
+                    panel.classList.add('arrived');
+                    
+                    // Espera 10 segundos e foca na próxima estação
+                    setTimeout(() => {
+                        if (currentTargetIndex < stations.length - 1) {
+                            currentTargetIndex++;
+                            panel.classList.remove('arrived');
+                        }
+                    }, 10000);
+                } else {
+                    document.getElementById('dist-text').innerHTML = "Faltam " + Math.round(dist) + " metros";
+                    document.getElementById('next-text').innerHTML = "Próximo: " + target.nome;
+                    panel.classList.remove('arrived');
+                }
+            }
+        });
+
+        map.on('locationerror', function() {
+            alert("Erro ao aceder ao GPS. Por favor, ative a localização no seu telemóvel.");
+        });
+    </script>
+</body>
+</html>
