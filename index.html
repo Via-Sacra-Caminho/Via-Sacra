@@ -6,71 +6,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        :root { --roxo: #4B0082; --dourado: #D4AF37; --fundo: #FDFCF0; }
-        body { margin: 0; padding: 0; font-family: 'Georgia', serif; background: var(--fundo); overflow: hidden; }
-        #map { height: 100vh; width: 100vw; z-index: 1; }
+        :root { 
+            --roxo: #6A0DAD; 
+            --dourado: #FFD700; 
+            --fundo: #ffffff;
+            --glass: rgba(255, 255, 255, 0.85);
+        }
         
-        /* PAINEL SUPERIOR - À esquerda para dar espaço ao menu */
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; overflow: hidden; }
+        #map { height: 100vh; width: 100vw; background: #242424; }
+
+        /* Painel Superior Estilo App */
         .progress-panel {
-            position: absolute; top: 10px; left: 10px;
-            width: 60%; background: rgba(255, 255, 255, 0.95); padding: 10px;
-            border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 1000; border: 1px solid var(--dourado);
+            position: absolute; top: 15px; left: 15px;
+            width: calc(100% - 90px); /* Dá espaço exato para o botão no canto */
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 12px 15px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            z-index: 1000;
+            border: 1px solid rgba(255,255,255,0.3);
         }
-        .dist-info { font-size: 14px; font-weight: bold; color: var(--roxo); text-transform: uppercase; line-height: 1.2; }
+        
+        .dist-info { font-size: 16px; font-weight: 800; color: #333; letter-spacing: -0.5px; }
+        .sub-info { font-size: 11px; color: #666; text-transform: uppercase; font-weight: 600; margin-top: 2px; }
 
+        /* Ícones das Estações - Mais Brilhantes */
         .number-icon {
-            background: var(--roxo); border: 2px solid var(--dourado); border-radius: 50%;
+            background: var(--roxo); 
+            border: 3px solid var(--dourado); 
+            border-radius: 50%;
             color: white; font-weight: bold; text-align: center;
-            line-height: 28px; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            line-height: 26px; font-size: 14px;
+            box-shadow: 0 0 15px rgba(106, 13, 173, 0.5);
         }
 
+        /* Botão GPS - Estilo Flutuante */
         .btn-start {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            z-index: 1000; padding: 15px 35px; background: var(--roxo); color: var(--dourado);
-            border: 2px solid var(--dourado); border-radius: 50px; font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; text-transform: uppercase;
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            z-index: 1000; padding: 16px 40px; 
+            background: linear-gradient(135deg, var(--roxo), #4B0082);
+            color: white; border: none; border-radius: 30px;
+            font-weight: bold; font-size: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            cursor: pointer; transition: all 0.3s;
         }
 
-        /* Estilo do Seletor de Camadas (Dia/Noite) */
-        .leaflet-control-layers { 
-            border: 2px solid var(--dourado) !important; 
-            border-radius: 8px !important;
-            margin-top: 10px !important;
-            margin-right: 10px !important;
+        /* Estilo do Seletor de Mapas (Botão Redondo) */
+        .leaflet-control-layers {
+            border: none !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
         }
 
-        .leaflet-popup-content-wrapper { border-radius: 12px; background: var(--fundo); border: 1px solid var(--dourado); }
-        .station-content h3 { color: var(--roxo); border-bottom: 1px solid var(--dourado); margin-bottom: 8px; font-family: 'Georgia', serif; }
+        /* Estilo Dark para o Popup */
+        .dark-popup .leaflet-popup-content-wrapper {
+            background: #1a1a1a; color: #eee; border: 1px solid var(--roxo);
+        }
+        .dark-popup .leaflet-popup-tip { background: #1a1a1a; }
+        .dark-popup h3 { color: var(--dourado) !important; border-bottom: 1px solid #444 !important; }
     </style>
 </head>
 <body>
 
-    <div class="progress-panel">
+    <div class="progress-panel" id="mainPanel">
         <div class="dist-info">Via-Sacra do Viso</div>
-        <div style="font-size: 11px; color: #666; margin-top: 3px;">Sra. do Porto ➔ Viso</div>
+        <div class="sub-info">Senhora do Porto ➔ Viso</div>
     </div>
 
-    <button class="btn-start" id="startBtn" onclick="ativarGPS()">Iniciar Caminhada</button>
+    <button class="btn-start" id="startBtn" onclick="ativarGPS()">COMEÇAR CAMINHADA</button>
 
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Camadas
-        var mapaDia = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
-        var mapaNoite = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
+        // 1. MAPAS COM MAIS DETALHE
+        // Mapa Dia: OpenStreetMap Standard
+        var mapaDia = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            attribution: '© OSM'
+        });
 
-        // Mapa focado na Igreja Sra. do Porto
+        // Mapa Noite: Stadia Alidade Smooth Dark (Muito melhor que o anterior)
+        var mapaNoite = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+            maxZoom: 20,
+            attribution: '© Stadia Maps'
+        });
+
         var map = L.map('map', { 
             zoomControl: false, 
             attributionControl: false,
             layers: [mapaDia] 
         }).setView([41.17558, -8.63293], 18);
 
-        // Seletor Dia/Noite - Começa fechado (collapsed) para poupar espaço
         var baseMaps = { "☀️ Dia": mapaDia, "🌙 Noite": mapaNoite };
-        L.control.layers(baseMaps, null, { position: 'topright', collapsed: true }).addTo(map);
+        var layersControl = L.control.layers(baseMaps, null, { position: 'topright', collapsed: true }).addTo(map);
+
+        // Mudar o tema visual conforme o mapa escolhido
+        map.on('baselayerchange', function(e) {
+            var panel = document.getElementById('mainPanel');
+            if (e.name === "🌙 Noite") {
+                panel.style.background = "rgba(0, 0, 0, 0.8)";
+                panel.style.color = "white";
+                document.querySelector('.dist-info').style.color = "white";
+                document.querySelector('.sub-info').style.color = "#aaa";
+            } else {
+                panel.style.background = "rgba(255, 255, 255, 0.85)";
+                panel.style.color = "black";
+                document.querySelector('.dist-info').style.color = "#333";
+                document.querySelector('.sub-info').style.color = "#666";
+            }
+        });
 
         var userMarker;
 
@@ -78,24 +125,41 @@
             .then(r => r.json())
             .then(data => {
                 L.geoJSON(data, {
-                    style: { color: '#D4AF37', weight: 4, opacity: 0.8, dashArray: '5, 10' },
+                    style: function(feature) {
+                        return { color: '#FFD700', weight: 5, opacity: 0.8, dashArray: '1, 10', lineCap: 'round' };
+                    },
                     pointToLayer: function(f, latlng) {
                         var num = f.properties.nome.match(/\d+/)[0];
-                        var icon = L.divIcon({ className: 'number-icon', html: num, iconSize: [32, 32], iconAnchor: [16, 16] });
-                        return L.marker(latlng, { icon: icon }).bindPopup(`<div class="station-content">${f.properties.texto}</div>`, { maxWidth: 280 });
+                        var icon = L.divIcon({ 
+                            className: 'number-icon', 
+                            html: num, 
+                            iconSize: [32, 32], 
+                            iconAnchor: [16, 16] 
+                        });
+                        
+                        var popupClass = map.hasLayer(mapaNoite) ? 'dark-popup' : '';
+                        return L.marker(latlng, { icon: icon }).bindPopup(
+                            `<div class="station-content">${f.properties.texto}</div>`, 
+                            { maxWidth: 280, className: popupClass }
+                        );
                     }
                 }).addTo(map);
             });
 
         function ativarGPS() {
-            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('startBtn').style.opacity = '0';
+            setTimeout(() => document.getElementById('startBtn').style.display = 'none', 300);
             map.locate({ setView: true, watch: true, enableHighAccuracy: true, maxZoom: 19 });
         }
 
         map.on('locationfound', function(e) {
             if (!userMarker) {
-                userMarker = L.circleMarker(e.latlng, { radius: 9, color: 'white', fillColor: '#D4AF37', fillOpacity: 1, weight: 3 }).addTo(map);
-            } else { userMarker.setLatLng(e.latlng); }
+                userMarker = L.circleMarker(e.latlng, { 
+                    radius: 10, color: 'white', fillColor: '#007AFF', fillOpacity: 1, weight: 3 
+                }).addTo(map);
+            } else { 
+                userMarker.setLatLng(e.latlng); 
+            }
         });
 
         map.on('locationerror', function() { alert("Por favor, ative o GPS."); });
