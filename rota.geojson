@@ -3,7 +3,7 @@
   "features": [
     {
       "type": "Feature",
-      "properties": { "nome": "Percurso Via-Sacra" },
+      "properties": { "nome": "Percurso" },
       "geometry": {
         "type": "LineString",
         "coordinates": [
@@ -131,7 +131,7 @@
       "type": "Feature",
       "properties": {
         "nome": "15ª Estação",
-        "texto": "<h3>15. A RESSURREIÇÃO DE JESUS</h3><b>Local: Igreja do Viso</b><br>Abriu-se-lhes o espírito e puderam compreender as Escrituras. “…O Messias havia de sofrer e de ressuscitar dos mortos ao terceiro dia”.<br><br><b>PRECE</b><br>Senhor, aumenta a minha fé e o meu amor por Ti, para que eu Te reconheça vivo no meio de nós: no sorriso das crianças, na beleza da criação, no amor e na caridade dos que Te conhecem. ConTigo quero trabalhar por um mundo novo, onde o Amor e a Verdade se encontrem, onde a Justiça e a Paz se abracem. Ressuscitou! Ressuscitou!"
+        "texto": "<h3>15. A RESSURREIÇÃO DE JESUS</h3>Abriu-se-lhes o espírito e puderam compreender as Escrituras. “…O Messias havia de sofrer e de ressuscitar dos mortos ao terceiro dia”.<br><br><b>PRECE</b><br>Senhor, aumenta a minha fé e o meu amor por Ti, para que eu Te reconheça vivo no meio de nós: no sorriso das crianças, na beleza da criação, no amor e na caridade dos que Te conhecem. ConTigo quero trabalhar por um mundo novo, onde o Amor e a Verdade se encontrem, onde a Justiça e a Paz se abracem. Ressuscitou! Ressuscitou!"
       },
       "geometry": { "type": "Point", "coordinates": [-8.64756, 41.18042] }
     }
