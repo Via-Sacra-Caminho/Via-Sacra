@@ -3,32 +3,123 @@
   "features": [
     {
       "type": "Feature",
-      "properties": { "tipo": "caminho" },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [-8.63293, 41.17558], [-8.63472, 41.17597], [-8.63766, 41.17552], 
-          [-8.63730, 41.17380], [-8.63741, 41.17361], [-8.63913, 41.17316], 
-          [-8.64066, 41.17388], [-8.64088, 41.17683], [-8.64191, 41.17774], 
-          [-8.64319, 41.17808], [-8.64430, 41.17863], [-8.64580, 41.17988], 
-          [-8.64602, 41.18102], [-8.64733, 41.18077], [-8.64751, 41.18040]
-        ]
-      }
+      "properties": {
+        "nome": "1ª Estação",
+        "texto": "<b>JESUS É CONDENADO</b><br><br>Pilatos depara-se com um réu inocente. A sua voz é incómoda e mexe com interesses instalados. Diante do dilema entre a justiça e o cargo, Pilatos lava as mãos e entrega Jesus à crucificação.<br><br><i><b>PRECE:</b> Senhor Jesus, liberta-me do medo de me comprometer com a verdade. Arranca de mim o comodismo e a indiferença. Dá-me a força para estar do lado da dignidade humana.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.63293, 41.17558] }
     },
-    { "type": "Feature", "properties": { "nome": "1ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.63293, 41.17558] } },
-    { "type": "Feature", "properties": { "nome": "2ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.63472, 41.17597] } },
-    { "type": "Feature", "properties": { "nome": "3ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.63766, 41.17552] } },
-    { "type": "Feature", "properties": { "nome": "4ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.63730, 41.17380] } },
-    { "type": "Feature", "properties": { "nome": "5ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.63741, 41.17361] } },
-    { "type": "Feature", "properties": { "nome": "6ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.63913, 41.17316] } },
-    { "type": "Feature", "properties": { "nome": "7ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.64066, 41.17388] } },
-    { "type": "Feature", "properties": { "nome": "8ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.64088, 41.17683] } },
-    { "type": "Feature", "properties": { "nome": "9ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.64191, 41.17774] } },
-    { "type": "Feature", "properties": { "nome": "10ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.64319, 41.17808] } },
-    { "type": "Feature", "properties": { "nome": "11ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.64430, 41.17863] } },
-    { "type": "Feature", "properties": { "nome": "12ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.64580, 41.17988] } },
-    { "type": "Feature", "properties": { "nome": "13ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.64602, 41.18102] } },
-    { "type": "Feature", "properties": { "nome": "14ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.64733, 41.18077] } },
-    { "type": "Feature", "properties": { "nome": "15ª Estação" }, "geometry": { "type": "Point", "coordinates": [-8.64751, 41.18040] } }
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "2ª Estação",
+        "texto": "<b>JESUS CARREGA A CRUZ</b><br><br>Os soldados maltratam Jesus e trazem uma pesada cruz para ele levar até ao Calvário. Jesus abraça a cruz e dá início à caminhada para o Gólgota.<br><br><i><b>PRECE:</b> Mestre, dá-me forças para, como Tu, aceitar os momentos de dor e de tristeza. Ajuda-me a amar as cruzes, pequenas ou grandes, da minha vida.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.63472, 41.17597] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "3ª Estação",
+        "texto": "<b>JESUS CAI PELA PRIMEIRA VEZ</b><br><br>Numa calçada incerta, Jesus escorrega e cai sob o peso da cruz. Entre risos e violência, esgotado e ferido, Ele levanta-se e pega de novo na cruz.<br><br><i><b>PRECE:</b> Senhor, quando o peso da vida me fizer cair, não me deixes ficar no chão. Ensina-me a aceitar a minha fragilidade e dá-me coragem para continuar a caminhar.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.63766, 41.17552] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "4ª Estação",
+        "texto": "<b>JESUS ENCONTRA SUA MÃE</b><br><br>Maria corre ao encontro do seu Filho, levando-lhe a sua presença carinhosa. No silêncio do olhar, Mãe e Filho compreendem-se, cumprindo a profecia da espada de dor.<br><br><i><b>PRECE:</b> Virgem Santíssima, olha pelas nossas famílias e lares. Cuida das nossas crianças e jovens para que encontrem Amor, Paz e Fé. Ensina-nos a dizer: 'Seja feita a Tua vontade'.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.63730, 41.17380] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "5ª Estação",
+        "texto": "<b>SIMÃO DE CIRENE CARREGA A CRUZ</b><br><br>Os soldados obrigam Simão de Cirene a carregar a cruz, não por pena, mas para garantir que Jesus chega vivo ao Calvário. Simão aceita o madeiro e segue os passos dolorosos do Mestre.<br><br><i><b>PRECE:</b> Senhor, ensina-me a reconhecer o Teu rosto nos que sofrem. Faz de mim um cireneu de hoje: alguém que ajuda, levanta e acompanha com bondade e simplicidade.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.63741, 41.17361] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "6ª Estação",
+        "texto": "<b>VERÓNICA ENXUGA O ROSTO DE JESUS</b><br><br>No meio da multidão temerosa, Verónica atreve-se a sair e, com um lenço, limpa carinhosamente o sangue e o suor do rosto de Jesus. Um gesto simples, mas de enorme coragem.<br><br><i><b>PRECE:</b> Senhor, dá-me um coração sensível e a coragem de mostrar compaixão mesmo quando é malvisto. Que eu transforme gestos simples em sinais do Teu amor.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.63913, 41.17316] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "7ª Estação",
+        "texto": "<b>JESUS CAI PELA SEGUNDA VEZ</b><br><br>O caminho para o Calvário torna-se cada vez mais difícil. Mesmo com ajuda, o cansaço é extremo e Jesus volta a cair, enfrentando o riso da multidão.<br><br><i><b>PRECE:</b> Senhor Jesus, ensina-me o valor da Humildade, da Verdade e do Amor. Lembra-me que nada sou sem Ti.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.64066, 41.17388] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "8ª Estação",
+        "texto": "<b>JESUS ENCONTRA AS MULHERES DE JERUSALÉM</b><br><br>Um grupo de mulheres chora ao ver o estado de Jesus. Com ternura, Ele pede-lhes que não chorem por Ele, mas por si mesmas e pelos seus filhos, apelando à conversão.<br><br><i><b>PRECE:</b> Senhor Jesus, que eu não chore só por emoção, mas por amor e desejo de mudança. Converte as minhas lágrimas em gestos de paz.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.64088, 41.17683] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "9ª Estação",
+        "texto": "<b>JESUS CAI PELA TERCEIRA VEZ</b><br><br>Exausto e sem forças, Jesus cai novamente. Entre comentários de vingança e chacota, a Sua queda é agora mais dolorosa e humilhante. Mas Ele recusa-se a desistir.<br><br><i><b>PRECE:</b> Senhor Jesus, quando eu cair pela milésima vez, dá-me a força de recomeçar contigo. Sê a minha força nas quedas e o meu apoio nos dias difíceis.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.64191, 41.17774] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "10ª Estação",
+        "texto": "<b>JESUS É DESPOJADO DAS SUAS VESTES</b><br><br>No Calvário, os soldados retiram brutalmente as vestes de Jesus, expondo-O à vista de todos e sorteando as Suas roupas. Um momento de profunda humilhação e despojamento.<br><br><i><b>PRECE:</b> Senhor Jesus, ajuda-me a defender a dignidade de cada pessoa e a renunciar ao orgulho. Ensina-me a revestir os meus irmãos com respeito, ternura e justiça.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.64319, 41.17808] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "11ª Estação",
+        "texto": "<b>JESUS É PREGADO NA CRUZ</b><br><br>Chega a hora decisiva. Obedecendo à vontade do Pai, Jesus estende-Se sobre a cruz e deixa-Se cravar pelas mãos e pelos pés, oferecendo o Seu sacrifício por nós.<br><br><i><b>PRECE:</b> Senhor Jesus, dá-me forças para me libertar de tudo o que fere e crucifica os meus irmãos. Perdoa a minha violência e toca o coração daqueles que eu magoo.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.64430, 41.17863] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "12ª Estação",
+        "texto": "<b>JESUS MORRE NA CRUZ</b><br><br>De braços estendidos, abraçando o mundo, Jesus entrega ao Pai o Seu espírito. Para os inimigos, parece o fim de uma missão fracassada; para nós, é o auge do Amor.<br><br><i><b>PRECE:</b> Meu Deus, concede-me o Teu Espírito para anunciar que, mesmo no aparente fracasso, Tu continuas de braços abertos e de coração a palpitar por cada um de nós.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.64580, 41.17988] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "13ª Estação",
+        "texto": "<b>JESUS É DESCIDO DA CRUZ</b><br><br>O corpo de Jesus é deposto nos braços de Maria. Ela, que O acolheu no nascimento, acolhe-O agora na morte, num silêncio cheio de dor e fidelidade.<br><br><i><b>PRECE:</b> Senhor, que eu Te consagre as minhas dores e medos. Dá-me a graça de revigorar as minhas forças olhando para Tua Mãe e, como Ela, dizer sempre: «Faça-se ó Pai, a Tua vontade».</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.64602, 41.18102] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "14ª Estação",
+        "texto": "<b>JESUS É DEPOSITADO NO SEPULCRO</b><br><br>Jesus é colocado num sepulcro novo, rodeado de silêncio e solidão. Enquanto os amigos choram, os inimigos temem a Sua promessa: 'E se Ele ressuscitasse?'.<br><br><i><b>PRECE:</b> Senhor, perdoa-me quando desisto antes de tempo. Dá-me ardor missionário para ser o Teu anúncio em todos os momentos e a força para perseverar na evangelização.</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.64733, 41.18077] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "15ª Estação",
+        "texto": "<b>A RESSURREIÇÃO DE JESUS</b><br><br>O Messias havia de sofrer e de ressuscitar dos mortos ao terceiro dia. A morte não O pôde segurar; Ele está vivo e abre-nos o entendimento para as Escrituras.<br><br><i><b>PRECE:</b> Senhor, aumenta a minha fé para que Te reconheça vivo no sorriso das crianças, na beleza da criação e no amor ao próximo. ConTigo quero trabalhar por um mundo de Justiça e Paz. Ressuscitou!</i>"
+      },
+      "geometry": { "type": "Point", "coordinates": [-8.64756, 41.18244] }
+    }
   ]
 }
