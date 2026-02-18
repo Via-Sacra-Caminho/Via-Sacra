@@ -3,6 +3,20 @@
   "features": [
     {
       "type": "Feature",
+      "properties": { "nome": "Percurso Via-Sacra" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-8.63293, 41.17558], [-8.63472, 41.17597], [-8.63766, 41.17552],
+          [-8.63730, 41.17380], [-8.63741, 41.17361], [-8.63913, 41.17316],
+          [-8.64066, 41.17388], [-8.64088, 41.17683], [-8.64191, 41.17774],
+          [-8.64319, 41.17808], [-8.64430, 41.17863], [-8.64580, 41.17988],
+          [-8.64602, 41.18102], [-8.64733, 41.18077], [-8.64756, 41.18244]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "properties": {
         "nome": "1ª Estação",
         "texto": "<b>JESUS É CONDENADO</b><br><br>Pilatos depara-se com um réu inocente. A sua voz é incómoda e mexe com interesses instalados. Diante do dilema entre a justiça e o cargo, Pilatos lava as mãos e entrega Jesus à crucificação.<br><br><i><b>PRECE:</b> Senhor Jesus, liberta-me do medo de me comprometer com a verdade. Arranca de mim o comodismo e a indiferença. Dá-me a força para estar do lado da dignidade humana.</i>"
