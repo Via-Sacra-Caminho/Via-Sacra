@@ -7,16 +7,16 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root { --roxo: #6A0DAD; --dourado: #FFD700; }
-        body { margin: 0; padding: 0; font-family: sans-serif; overflow: hidden; }
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
         #map { height: 100vh; width: 100vw; background: #eee; }
 
         .progress-panel {
             position: absolute; top: 10px; left: 10px; width: calc(100% - 110px);
-            background: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 12px;
-            z-index: 1000; border: 1px solid var(--dourado);
+            background: rgba(255, 255, 255, 0.95); padding: 12px; border-radius: 12px;
+            z-index: 1000; border: 1px solid var(--dourado); box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         
-        .dist-info { font-size: 15px; font-weight: bold; color: var(--roxo); }
+        .dist-info { font-size: 20px; font-weight: bold; color: var(--roxo); text-align: center; }
 
         .number-icon {
             background: var(--roxo); border: 2px solid var(--dourado); border-radius: 50%;
@@ -28,24 +28,17 @@
             position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
             z-index: 1000; padding: 16px 40px; background: var(--roxo); color: white;
             border: 2px solid var(--dourado); border-radius: 30px; font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer;
-        }
-
-        /* Estilo do marcador de utilizador (ponto azul que brilha) */
-        .user-dot {
-            background-color: #007AFF; border: 2px solid white; border-radius: 50%;
-            box-shadow: 0 0 10px #007AFF;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4); cursor: pointer; text-transform: uppercase;
         }
     </style>
 </head>
 <body>
 
     <div class="progress-panel">
-        <div class="dist-info">Via-Sacra do Viso</div>
-        <div style="font-size: 11px;">Sra. do Porto ➔ Viso</div>
+        <div class="dist-info">Via-Sacra</div>
     </div>
 
-    <button class="btn-start" id="startBtn" onclick="ativarGPS()">ATIVAR LOCALIZAÇÃO</button>
+    <button class="btn-start" id="startBtn" onclick="ativarGPS()">Ativar Localização</button>
 
     <div id="map"></div>
 
@@ -61,60 +54,33 @@
 
         var userMarker;
 
-        // Carregar estações do rota.geojson
         fetch('rota.geojson?v=' + Date.now())
             .then(r => r.json())
             .then(data => {
                 L.geoJSON(data, {
                     style: { color: '#FFD700', weight: 4, dashArray: '5, 10' },
                     pointToLayer: function(f, latlng) {
-                        var num = f.properties.nome.match(/\d+/)[0];
-                        var icon = L.divIcon({ className: 'number-icon', html: num, iconSize: [30, 30] });
-                        return L.marker(latlng, { icon: icon }).bindPopup(`<div>${f.properties.texto}</div>`, { maxWidth: 260 });
+                        if (f.geometry.type === "Point") {
+                            var num = f.properties.nome.match(/\d+/)[0];
+                            var icon = L.divIcon({ className: 'number-icon', html: num, iconSize: [30, 30] });
+                            return L.marker(latlng, { icon: icon }).bindPopup(`<div>${f.properties.texto}</div>`, { maxWidth: 280 });
+                        }
                     }
                 }).addTo(map);
             });
 
         function ativarGPS() {
-            // Tenta obter a localização uma vez imediatamente para forçar o pedido de permissão
-            if (!navigator.geolocation) {
-                alert("O seu navegador não suporta GPS.");
-                return;
-            }
-
             document.getElementById('startBtn').innerText = "A localizar...";
-            
-            // Configurações de alta precisão
-            var geoOptions = {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
-            };
-
-            map.locate({ 
-                setView: true, 
-                maxZoom: 18, 
-                watch: true, 
-                enableHighAccuracy: true 
-            });
+            map.locate({ setView: true, watch: true, enableHighAccuracy: true });
         }
 
         map.on('locationfound', function(e) {
             document.getElementById('startBtn').style.display = 'none';
-            
             if (!userMarker) {
-                // Cria o ponto azul na tua posição
                 userMarker = L.circleMarker(e.latlng, {
                     radius: 8, fillOpacity: 1, color: 'white', fillColor: '#007AFF', weight: 2
                 }).addTo(map);
-            } else {
-                userMarker.setLatLng(e.latlng);
-            }
-        });
-
-        map.on('locationerror', function(e) {
-            alert("Erro de GPS: " + e.message + ". Verifique se o site tem permissão de localização nas definições do seu telemóvel.");
-            document.getElementById('startBtn').innerText = "TENTAR NOVAMENTE";
+            } else { userMarker.setLatLng(e.latlng); }
         });
     </script>
 </body>
