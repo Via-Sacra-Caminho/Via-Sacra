@@ -3,16 +3,15 @@
   "features": [
     {
       "type": "Feature",
-      "properties": { "nome": "Percurso Via-Sacra: Senhora do Porto -> Viso" },
+      "properties": { "nome": "Percurso Via-Sacra" },
       "geometry": {
         "type": "LineString",
         "coordinates": [
-          [-8.63228, 41.17645], [-8.63470, 41.17590], [-8.63760, 41.17550], 
-          [-8.63740, 41.17480], [-8.63740, 41.17360], [-8.63910, 41.17310], 
-          [-8.64060, 41.17380], [-8.64080, 41.17680], [-8.64190, 41.17770], 
-          [-8.64310, 41.17800], [-8.64430, 41.17860], [-8.64580, 41.17980], 
-          [-8.64600, 41.18100], [-8.64730, 41.18070], [-8.64745, 41.18055], 
-          [-8.64756, 41.18042]
+          [-8.63293, 41.17558], [-8.63472, 41.17597], [-8.63766, 41.17552], 
+          [-8.63745, 41.17480], [-8.63741, 41.17361], [-8.63913, 41.17316], 
+          [-8.64066, 41.17388], [-8.64088, 41.17683], [-8.64191, 41.17774], 
+          [-8.64319, 41.17808], [-8.64430, 41.17863], [-8.64580, 41.17988], 
+          [-8.64602, 41.18102], [-8.64733, 41.18077], [-8.64756, 41.18042]
         ]
       }
     },
@@ -20,83 +19,80 @@
       "type": "Feature",
       "properties": {
         "nome": "1ª Estação",
-        "texto": "<h3>1. JESUS É CONDENADO</h3><b>Local: Igreja da Senhora do Porto</b><br>Pilatos depara-se com um réu inocente...<br><br><b>PRECE</b><br>Senhor Jesus, liberta-me do medo de me comprometer com a verdade e a justiça."
+        "texto": "<h3>1. JESUS É CONDENADO</h3><b>Igreja da Senhora do Porto</b><br>Pilatos depara-se com um réu inocente. A sua voz é incómoda. A sua mensagem mexe com muitos interesses instalados, por isso querem fazê-lo desaparecer...<br><br><b>PRECE</b><br>Senhor Jesus, liberta-me do medo de me comprometer com a verdade e a justiça."
       },
-      "geometry": { "type": "Point", "coordinates": [-8.63228, 41.17645] }
+      "geometry": { "type": "Point", "coordinates": [-8.63293, 41.17558] }
     },
     {
       "type": "Feature",
-      "properties": { "nome": "2ª Estação", "texto": "<h3>2. JESUS CARREGA A CRUZ</h3>", "geometry": { "type": "Point", "coordinates": [-8.63470, 41.17590] } },
-      "geometry": { "type": "Point", "coordinates": [-8.63470, 41.17590] }
+      "properties": { "nome": "2ª Estação", "texto": "<h3>2. JESUS CARREGA A CRUZ</h3>Jesus abraça a cruz e dá início à caminhada do Gólgota." },
+      "geometry": { "type": "Point", "coordinates": [-8.63472, 41.17597] }
     },
     {
       "type": "Feature",
-      "properties": { "nome": "3ª Estação", "texto": "<h3>3. JESUS CAI PELA PRIMEIRA VEZ</h3>", "geometry": { "type": "Point", "coordinates": [-8.63760, 41.17550] } },
-      "geometry": { "type": "Point", "coordinates": [-8.63760, 41.17550] }
+      "properties": { "nome": "3ª Estação", "texto": "<h3>3. JESUS CAI PELA PRIMEIRA VEZ</h3>Jesus escorrega e cai sob o peso da cruz na calçada incerta." },
+      "geometry": { "type": "Point", "coordinates": [-8.63766, 41.17552] }
     },
     {
       "type": "Feature",
-      "properties": { "nome": "4ª Estação", "texto": "<h3>4. JESUS ENCONTRA SUA MÃE</h3>", "geometry": { "type": "Point", "coordinates": [-8.63740, 41.17480] } },
-      "geometry": { "type": "Point", "coordinates": [-8.63740, 41.17480] }
+      "properties": { "nome": "4ª Estação", "texto": "<h3>4. JESUS ENCONTRA SUA MÃE</h3>Maria vai ao encontro de seu filho com presença carinhosa." },
+      "geometry": { "type": "Point", "coordinates": [-8.63745, 41.17480] }
     },
     {
       "type": "Feature",
-      "properties": { "nome": "5ª Estação", "texto": "<h3>5. SIMÃO DE CIRENE CARREGA A CRUZ</h3>", "geometry": { "type": "Point", "coordinates": [-8.63740, 41.17360] } },
-      "geometry": { "type": "Point", "coordinates": [-8.63740, 41.17360] }
+      "properties": { "nome": "5ª Estação", "texto": "<h3>5. SIMÃO DE CIRENE CARREGA A CRUZ</h3>Simão ajuda a carregar o madeiro manchado de sangue." },
+      "geometry": { "type": "Point", "coordinates": [-8.63741, 41.17361] }
     },
     {
       "type": "Feature",
-      "properties": { "nome": "6ª Estação", "texto": "<h3>6. VERÓNICA ENXUGA O ROSTO DE JESUS</h3>", "geometry": { "type": "Point", "coordinates": [-8.63910, 41.17310] } },
-      "geometry": { "type": "Point", "coordinates": [-8.63910, 41.17310] }
+      "properties": { "nome": "6ª Estação", "texto": "<h3>6. VERÓNICA ENXUGA O ROSTO DE JESUS</h3>Um ato de grande atrevimento e compaixão." },
+      "geometry": { "type": "Point", "coordinates": [-8.63913, 41.17316] }
     },
     {
       "type": "Feature",
-      "properties": { "nome": "7ª Estação", "texto": "<h3>7. JESUS CAI PELA SEGUNDA VEZ</h3>", "geometry": { "type": "Point", "coordinates": [-8.64060, 41.17380] } },
-      "geometry": { "type": "Point", "coordinates": [-8.64060, 41.17380] }
+      "properties": { "nome": "7ª Estação", "texto": "<h3>7. JESUS CAI PELA SEGUNDA VEZ</h3>Os pés pesam como chumbo e Jesus cai novamente." },
+      "geometry": { "type": "Point", "coordinates": [-8.64066, 41.17388] }
     },
     {
       "type": "Feature",
-      "properties": { "nome": "8ª Estação", "texto": "<h3>8. JESUS ENCONTRA AS MULHERES DE JERUSALÉM</h3>", "geometry": { "type": "Point", "coordinates": [-8.64080, 41.17680] } },
-      "geometry": { "type": "Point", "coordinates": [-8.64080, 41.17680] }
+      "properties": { "nome": "8ª Estação", "texto": "<h3>8. JESUS ENCONTRA AS MULHERES DE JERUSALÉM</h3>Jesus pede que não chorem por Ele, mas por elas e seus filhos." },
+      "geometry": { "type": "Point", "coordinates": [-8.64088, 41.17683] }
     },
     {
       "type": "Feature",
-      "properties": { "nome": "9ª Estação", "texto": "<h3>9. JESUS CAI PELA TERCEIRA VEZ</h3>", "geometry": { "type": "Point", "coordinates": [-8.64190, 41.17770] } },
-      "geometry": { "type": "Point", "coordinates": [-8.64190, 41.17770] }
+      "properties": { "nome": "9ª Estação", "texto": "<h3>9. JESUS CAI PELA TERCEIRA VEZ</h3>A queda mais dolorosa e humilhante de todas." },
+      "geometry": { "type": "Point", "coordinates": [-8.64191, 41.17774] }
     },
     {
       "type": "Feature",
-      "properties": { "nome": "10ª Estação", "texto": "<h3>10. JESUS É DESPOJADO DAS SUAS VESTES</h3>", "geometry": { "type": "Point", "coordinates": [-8.64310, 41.17800] } },
-      "geometry": { "type": "Point", "coordinates": [-8.64310, 41.17800] }
+      "properties": { "nome": "10ª Estação", "texto": "<h3>10. JESUS É DESPOJADO DAS SUAS VESTES</h3>Soldados tiram com brutalidade as vestes de Jesus." },
+      "geometry": { "type": "Point", "coordinates": [-8.64319, 41.17808] }
     },
     {
       "type": "Feature",
-      "properties": { "nome": "11ª Estação", "texto": "<h3>11. JESUS É PREGADO NA CRUZ</h3>", "geometry": { "type": "Point", "coordinates": [-8.64430, 41.17860] } },
-      "geometry": { "type": "Point", "coordinates": [-8.64430, 41.17860] }
+      "properties": { "nome": "11ª Estação", "texto": "<h3>11. JESUS É PREGADO NA CRUZ</h3>Jesus estende-se sobre a cruz para cumprir a vontade do Pai." },
+      "geometry": { "type": "Point", "coordinates": [-8.64430, 41.17863] }
     },
     {
       "type": "Feature",
-      "properties": { "nome": "12ª Estação", "texto": "<h3>12. JESUS MORRE NA CRUZ</h3>", "geometry": { "type": "Point", "coordinates": [-8.64580, 41.17980] } },
-      "geometry": { "type": "Point", "coordinates": [-8.64580, 41.17980] }
+      "properties": { "nome": "12ª Estação", "texto": "<h3>12. JESUS MORRE NA CRUZ</h3>Jesus entrega ao Pai o Seu espírito." },
+      "geometry": { "type": "Point", "coordinates": [-8.64580, 41.17988] }
     },
     {
       "type": "Feature",
-      "properties": { "nome": "13ª Estação", "texto": "<h3>13. JESUS É DESCIDO DA CRUZ</h3>", "geometry": { "type": "Point", "coordinates": [-8.64600, 41.18100] } },
-      "geometry": { "type": "Point", "coordinates": [-8.64600, 41.18100] }
+      "properties": { "nome": "13ª Estação", "texto": "<h3>13. JESUS É DESCIDO DA CRUZ</h3>O corpo de Jesus é deposto nos braços de Maria." },
+      "geometry": { "type": "Point", "coordinates": [-8.64602, 41.18102] }
     },
     {
       "type": "Feature",
-      "properties": {
-        "nome": "14ª Estação",
-        "texto": "<h3>14. JESUS É DEPOSITADO NO SEPULCRO</h3>Silêncio e solidão ao redor deste túmulo novo."
-      },
-      "geometry": { "type": "Point", "coordinates": [-8.64745, 41.18055] }
+      "properties": { "nome": "14ª Estação", "texto": "<h3>14. JESUS É DEPOSITADO NO SEPULCRO</h3>Silêncio e solidão ao redor deste túmulo novo." },
+      "geometry": { "type": "Point", "coordinates": [-8.64733, 41.18077] }
     },
     {
       "type": "Feature",
       "properties": {
         "nome": "15ª Estação",
-        "texto": "<h3>15. A RESSURREIÇÃO DE JESUS</h3><b>Local: Igreja do Viso</b><br>Ressuscitou! O Messias ressuscitou ao terceiro dia!"
+        "texto": "<h3>15. A RESSURREIÇÃO DE JESUS</h3><b>Igreja do Viso</b><br>Ressuscitou! O Messias ressuscitou ao terceiro dia!"
       },
       "geometry": { "type": "Point", "coordinates": [-8.64756, 41.18042] }
     }
