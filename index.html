@@ -10,7 +10,7 @@
         body { margin: 0; padding: 0; font-family: 'Georgia', serif; background: var(--fundo); overflow: hidden; }
         #map { height: 100vh; width: 100vw; }
         
-        /* Painel de Progresso Superior */
+        /* Painel de Progresso */
         .progress-panel {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
             width: 85%; background: rgba(255, 255, 255, 0.95); padding: 15px;
@@ -21,7 +21,7 @@
         .dist-info { font-size: 16px; font-weight: bold; color: var(--roxo); text-transform: uppercase; letter-spacing: 1px; }
         .next-text { font-size: 13px; color: #555; margin-top: 5px; font-style: italic; }
 
-        /* Ícones das Estações */
+        /* Estilo dos Ícones */
         .number-icon {
             background: var(--roxo); border: 2px solid var(--dourado); border-radius: 50%;
             color: white; font-weight: bold; text-align: center;
@@ -37,47 +37,60 @@
             font-size: 16px; letter-spacing: 2px; text-transform: uppercase;
         }
 
-        /* Popups */
+        /* Popups das Estações */
         .leaflet-popup-content-wrapper { background: var(--fundo); border-radius: 15px; border: 1px solid var(--dourado); }
         .station-content h3 { color: var(--roxo); margin-bottom: 10px; border-bottom: 1px solid var(--dourado); padding-bottom: 5px; }
+
+        /* Customização do seletor de mapa para ser mais visível */
+        .leaflet-control-layers { border-radius: 10px !important; border: 2px solid var(--dourado) !important; font-family: sans-serif; }
     </style>
 </head>
 <body>
 
     <div class="progress-panel" id="p-panel">
         <div class="dist-info" id="dist-text">Caminho da Cruz</div>
-        <div class="next-text" id="next-text">Clique abaixo para iniciar a sua peregrinação</div>
+        <div class="next-text" id="next-text">Escolha o modo (Dia/Noite) no canto do mapa</div>
     </div>
 
-    <button class="btn-start" id="startBtn" onclick="ativarGPS()">Iniciar Via-Sacra</button>
+    <button class="btn-start" id="startBtn" onclick="ativarGPS()">Iniciar no Viso</button>
 
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // CONFIGURAÇÃO DO MAPA COM ZOOM AMPLIADO
-        // maxZoom: 20 permite aproximar muito mais que o padrão
+        // 1. DEFINIR OS DOIS ESTILOS DE MAPA
+        var mapaDia = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19, attribution: '© OSM'
+        });
+
+        var mapaNoite = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19, attribution: '© CartoDB'
+        });
+
+        // 2. INICIAR O MAPA (Começa com o de Dia por padrão)
         var map = L.map('map', { 
             zoomControl: false, 
             attributionControl: false,
-            maxZoom: 20 
-        }).setView([41.17597, -8.63472], 18); // Zoom inicial mais perto (18)
+            layers: [mapaDia] // Camada inicial
+        }).setView([41.17597, -8.63472], 17);
 
-        // Usando CartoDB Voyager que suporta bem zooms elevados e é limpo
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            maxZoom: 20
-        }).addTo(map);
+        // 3. ADICIONAR O SELETOR (Botão no canto superior direito)
+        var baseMaps = {
+            "☀️ Modo Dia": mapaDia,
+            "🌙 Modo Noite": mapaNoite
+        };
+        L.control.layers(baseMaps, null, { position: 'topright', collapsed: false }).addTo(map);
 
         var stations = [];
         var userMarker;
         var currentTargetIndex = 0;
 
-        // Carregar o GeoJSON
+        // Carregar Estações do GeoJSON
         fetch('rota.geojson?v=' + Date.now())
             .then(r => r.json())
             .then(data => {
                 L.geoJSON(data, {
-                    style: { color: '#4B0082', weight: 5, opacity: 0.6, dashArray: '5, 10' },
+                    style: { color: '#D4AF37', weight: 4, opacity: 0.8, dashArray: '8, 12' },
                     pointToLayer: function(f, latlng) {
                         stations.push({ latlng: latlng, nome: f.properties.nome });
                         var label = f.properties.nome.match(/\d+/)[0];
@@ -89,57 +102,39 @@
                         });
                         return L.marker(latlng, { icon: icon }).bindPopup(
                             `<div class="station-content">${f.properties.texto}</div>`, 
-                            { maxWidth: 280, autoPanPadding: [50, 50] }
+                            { maxWidth: 280 }
                         );
                     }
                 }).addTo(map);
-                
-                // Ordenar estações numericamente
                 stations.sort((a, b) => parseInt(a.nome.match(/\d+/)) - parseInt(b.nome.match(/\d+/)));
             });
 
         function ativarGPS() {
             document.getElementById('startBtn').style.display = 'none';
             document.getElementById('dist-text').innerHTML = "⏳ A localizar...";
-            // Zoom 19 ao localizar para dar máxima precisão visual
-            map.locate({ setView: true, watch: true, enableHighAccuracy: true, maxZoom: 19 });
+            map.locate({ setView: true, watch: true, enableHighAccuracy: true, maxZoom: 18 });
         }
 
         map.on('locationfound', function(e) {
             if (!userMarker) {
-                userMarker = L.circleMarker(e.latlng, { 
-                    radius: 9, 
-                    color: 'white', 
-                    fillColor: '#D4AF37', 
-                    fillOpacity: 1, 
-                    weight: 3 
-                }).addTo(map);
-            } else { 
-                userMarker.setLatLng(e.latlng); 
-            }
+                userMarker = L.circleMarker(e.latlng, { radius: 10, color: 'white', fillColor: '#D4AF37', fillOpacity: 1, weight: 3 }).addTo(map);
+            } else { userMarker.setLatLng(e.latlng); }
 
             if (stations.length > 0) {
                 var target = stations[currentTargetIndex];
                 var dist = e.latlng.distanceTo(target.latlng);
                 
-                if (dist < 20) {
-                    document.getElementById('dist-text').innerHTML = "📍 Chegou à " + target.nome;
-                    document.getElementById('next-text').innerHTML = "Abra a estação para rezar.";
-                    // Se chegou, prepara a próxima
-                    if(currentTargetIndex < stations.length - 1) {
-                        // Opcional: currentTargetIndex++; 
-                    }
+                if (dist < 25) {
+                    document.getElementById('dist-text').innerHTML = "📍 Próximo de: " + target.nome;
+                    document.getElementById('next-text').innerHTML = "Toque no número para rezar.";
                 } else {
-                    document.getElementById('dist-text').innerHTML = "Faltam " + Math.round(dist) + " metros";
-                    document.getElementById('next-text').innerHTML = "Próxima: " + target.nome;
+                    document.getElementById('dist-text').innerHTML = "A " + Math.round(dist) + " metros";
+                    document.getElementById('next-text').innerHTML = "Caminhe para a " + target.nome;
                 }
             }
         });
 
-        map.on('locationerror', function() {
-            alert("Erro ao aceder ao GPS. Verifique se autorizou a localização.");
-            document.getElementById('dist-text').innerHTML = "Erro de GPS";
-        });
+        map.on('locationerror', function() { alert("Por favor, ligue o GPS."); });
     </script>
 </body>
 </html>
