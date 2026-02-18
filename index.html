@@ -15,7 +15,6 @@
             background: rgba(255, 255, 255, 0.95); padding: 12px; border-radius: 12px;
             z-index: 1000; border: 1px solid var(--dourado); box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        
         .dist-info { font-size: 20px; font-weight: bold; color: var(--roxo); text-align: center; }
 
         .number-icon {
@@ -38,7 +37,7 @@
         <div class="dist-info">Via-Sacra</div>
     </div>
 
-    <button class="btn-start" id="startBtn" onclick="ativarGPS()">Ativar Localização</button>
+    <button class="btn-start" id="startBtn" onclick="ativarGPS()">Iniciar Caminhada</button>
 
     <div id="map"></div>
 
@@ -47,8 +46,9 @@
         var mapaDia = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
         var mapaNoite = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
 
+        // Ajuste 1: Zoom inicial equilibrado (16)
         var map = L.map('map', { zoomControl: false, attributionControl: false, layers: [mapaDia] })
-                   .setView([41.17558, -8.63293], 18);
+                   .setView([41.17558, -8.63293], 16);
 
         L.control.layers({ "☀️ Dia": mapaDia, "🌙 Noite": mapaNoite }, null, { position: 'topright' }).addTo(map);
 
@@ -63,7 +63,7 @@
                         if (f.geometry.type === "Point") {
                             var num = f.properties.nome.match(/\d+/)[0];
                             var icon = L.divIcon({ className: 'number-icon', html: num, iconSize: [30, 30] });
-                            return L.marker(latlng, { icon: icon }).bindPopup(`<div style="font-size:14px;">${f.properties.texto}</div>`, { maxWidth: 280 });
+                            return L.marker(latlng, { icon: icon }).bindPopup(`<div>${f.properties.texto}</div>`, { maxWidth: 280 });
                         }
                     }
                 }).addTo(map);
@@ -71,25 +71,38 @@
 
         function ativarGPS() {
             const btn = document.getElementById('startBtn');
-            btn.innerText = "A procurar sinal...";
+            btn.innerText = "A ligar GPS...";
             
-            navigator.geolocation.getCurrentPosition(function() {
-                btn.style.display = 'none';
-                map.locate({ setView: true, watch: true, enableHighAccuracy: true });
-            }, function(err) {
-                alert("Erro: Ative o GPS e permita a localização no seu navegador.");
-                btn.innerText = "Tentar Novamente";
-            }, { enableHighAccuracy: true });
+            // Força a alta precisão para o ponto azul aparecer
+            map.locate({ 
+                setView: true, 
+                watch: true, 
+                enableHighAccuracy: true,
+                maxZoom: 18 
+            });
         }
 
+        // Ajuste 3: Código de Seguimento Ativo (O mapa move-se contigo)
         map.on('locationfound', function(e) {
+            document.getElementById('startBtn').style.display = 'none';
+
             if (!userMarker) {
+                // Cria o ponto azul (a tua posição)
                 userMarker = L.circleMarker(e.latlng, {
-                    radius: 9, fillOpacity: 1, color: 'white', fillColor: '#007AFF', weight: 3
+                    radius: 10, fillOpacity: 1, color: 'white', fillColor: '#007AFF', weight: 3
                 }).addTo(map);
             } else { 
+                // Move o ponto azul conforme caminhas
                 userMarker.setLatLng(e.latlng); 
             }
+
+            // Centraliza o mapa em ti automaticamente para não saíres do ecrã
+            map.panTo(e.latlng);
+        });
+
+        map.on('locationerror', function(e) {
+            alert("Erro: Não foi possível obter a sua localização. Verifique se o GPS está ligado na rua.");
+            document.getElementById('startBtn').innerText = "Tentar Novamente";
         });
     </script>
 </body>
