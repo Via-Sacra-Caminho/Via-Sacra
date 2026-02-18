@@ -63,24 +63,33 @@
                         if (f.geometry.type === "Point") {
                             var num = f.properties.nome.match(/\d+/)[0];
                             var icon = L.divIcon({ className: 'number-icon', html: num, iconSize: [30, 30] });
-                            return L.marker(latlng, { icon: icon }).bindPopup(`<div>${f.properties.texto}</div>`, { maxWidth: 280 });
+                            return L.marker(latlng, { icon: icon }).bindPopup(`<div style="font-size:14px;">${f.properties.texto}</div>`, { maxWidth: 280 });
                         }
                     }
                 }).addTo(map);
             });
 
         function ativarGPS() {
-            document.getElementById('startBtn').innerText = "A localizar...";
-            map.locate({ setView: true, watch: true, enableHighAccuracy: true });
+            const btn = document.getElementById('startBtn');
+            btn.innerText = "A procurar sinal...";
+            
+            navigator.geolocation.getCurrentPosition(function() {
+                btn.style.display = 'none';
+                map.locate({ setView: true, watch: true, enableHighAccuracy: true });
+            }, function(err) {
+                alert("Erro: Ative o GPS e permita a localização no seu navegador.");
+                btn.innerText = "Tentar Novamente";
+            }, { enableHighAccuracy: true });
         }
 
         map.on('locationfound', function(e) {
-            document.getElementById('startBtn').style.display = 'none';
             if (!userMarker) {
                 userMarker = L.circleMarker(e.latlng, {
-                    radius: 8, fillOpacity: 1, color: 'white', fillColor: '#007AFF', weight: 2
+                    radius: 9, fillOpacity: 1, color: 'white', fillColor: '#007AFF', weight: 3
                 }).addTo(map);
-            } else { userMarker.setLatLng(e.latlng); }
+            } else { 
+                userMarker.setLatLng(e.latlng); 
+            }
         });
     </script>
 </body>
