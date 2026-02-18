@@ -8,42 +8,48 @@
     <style>
         :root { --roxo: #4B0082; --dourado: #D4AF37; --fundo: #FDFCF0; }
         body { margin: 0; padding: 0; font-family: 'Georgia', serif; background: var(--fundo); overflow: hidden; }
-        #map { height: 100vh; width: 100vw; }
+        #map { height: 100vh; width: 100vw; z-index: 1; }
         
+        /* Painel de Informação Superior */
         .progress-panel {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            width: 85%; background: rgba(255, 255, 255, 0.95); padding: 15px;
-            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            z-index: 2000; text-align: center; border: 1px solid var(--dourado);
-            backdrop-filter: blur(10px);
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+            width: 90%; background: rgba(255, 255, 255, 0.95); padding: 12px;
+            border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 1000; text-align: center; border: 1px solid var(--dourado);
         }
-        .dist-info { font-size: 16px; font-weight: bold; color: var(--roxo); text-transform: uppercase; letter-spacing: 1px; }
+        .dist-info { font-size: 16px; font-weight: bold; color: var(--roxo); text-transform: uppercase; }
 
+        /* Ícones das Estações */
         .number-icon {
             background: var(--roxo); border: 2px solid var(--dourado); border-radius: 50%;
             color: white; font-weight: bold; text-align: center;
-            line-height: 28px; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            line-height: 28px; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.4);
         }
 
+        /* Botão GPS */
         .btn-start {
-            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-            z-index: 2000; padding: 18px 40px; background: var(--roxo); color: var(--dourado);
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            z-index: 1000; padding: 15px 35px; background: var(--roxo); color: var(--dourado);
             border: 2px solid var(--dourado); border-radius: 50px; font-weight: bold;
-            box-shadow: 0 10px 25px rgba(75, 0, 130, 0.4); cursor: pointer;
-            font-size: 16px; letter-spacing: 2px; text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; text-transform: uppercase;
         }
 
-        .leaflet-control-layers { border-radius: 10px !important; border: 2px solid var(--dourado) !important; font-weight: bold; }
+        /* Popups Estilizados */
+        .leaflet-popup-content-wrapper { border-radius: 12px; background: var(--fundo); border: 1px solid var(--dourado); }
+        .station-content h3 { color: var(--roxo); border-bottom: 1px solid var(--dourado); margin-bottom: 8px; }
+        
+        /* Seletor de Camadas */
+        .leaflet-control-layers { border: 2px solid var(--dourado) !important; border-radius: 8px !important; }
     </style>
 </head>
 <body>
 
-    <div class="progress-panel" id="p-panel">
-        <div class="dist-info" id="dist-text">Caminho da Cruz</div>
-        <div id="next-text" style="font-size: 13px;">Senhora do Porto ➔ Viso</div>
+    <div class="progress-panel">
+        <div class="dist-info" id="dist-text">Via-Sacra: Sra. do Porto ➔ Viso</div>
+        <div id="next-text" style="font-size: 12px; color: #666;">Selecione o modo Dia/Noite no canto do mapa</div>
     </div>
 
-    <button class="btn-start" id="startBtn" onclick="ativarGPS()">Iniciar Via-Sacra</button>
+    <button class="btn-start" id="startBtn" onclick="ativarGPS()">Ativar Minha Localização</button>
 
     <div id="map"></div>
 
@@ -53,29 +59,31 @@
         var mapaDia = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
         var mapaNoite = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
 
-        // Inicialização (Focada na Senhora do Porto)
+        // Início na Sra. do Porto
         var map = L.map('map', { 
             zoomControl: false, 
             attributionControl: false,
             layers: [mapaDia] 
         }).setView([41.17558, -8.63293], 18);
 
+        // Seletor de Camadas
         var baseMaps = { "☀️ Modo Dia": mapaDia, "🌙 Modo Noite": mapaNoite };
         L.control.layers(baseMaps, null, { position: 'topright', collapsed: false }).addTo(map);
 
         var stations = [];
         var userMarker;
 
+        // Carregar Rota e Estações
         fetch('rota.geojson?v=' + Date.now())
             .then(r => r.json())
             .then(data => {
                 L.geoJSON(data, {
-                    style: { color: '#D4AF37', weight: 4, opacity: 0.8, dashArray: '8, 12' },
+                    style: { color: '#D4AF37', weight: 4, opacity: 0.8, dashArray: '5, 10' },
                     pointToLayer: function(f, latlng) {
                         stations.push({ latlng: latlng, nome: f.properties.nome });
-                        var label = f.properties.nome.match(/\d+/)[0];
-                        var icon = L.divIcon({ className: 'number-icon', html: label, iconSize: [32, 32], iconAnchor: [16, 16] });
-                        return L.marker(latlng, { icon: icon }).bindPopup(`<div style="font-family: serif;">${f.properties.texto}</div>`, { maxWidth: 280 });
+                        var num = f.properties.nome.match(/\d+/)[0];
+                        var icon = L.divIcon({ className: 'number-icon', html: num, iconSize: [32, 32], iconAnchor: [16, 16] });
+                        return L.marker(latlng, { icon: icon }).bindPopup(`<div class="station-content">${f.properties.texto}</div>`, { maxWidth: 280 });
                     }
                 }).addTo(map);
             });
@@ -87,9 +95,11 @@
 
         map.on('locationfound', function(e) {
             if (!userMarker) {
-                userMarker = L.circleMarker(e.latlng, { radius: 10, color: 'white', fillColor: '#D4AF37', fillOpacity: 1, weight: 3 }).addTo(map);
+                userMarker = L.circleMarker(e.latlng, { radius: 9, color: 'white', fillColor: '#D4AF37', fillOpacity: 1, weight: 3 }).addTo(map);
             } else { userMarker.setLatLng(e.latlng); }
         });
+
+        map.on('locationerror', function() { alert("Por favor, ative o GPS do seu telemóvel."); });
     </script>
 </body>
 </html>
