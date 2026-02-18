@@ -9,7 +9,6 @@
         body { margin: 0; padding: 0; font-family: -apple-system, sans-serif; background: #f4f4f4; overflow: hidden; }
         #map { height: 100vh; width: 100vw; transition: filter 0.3s; }
         
-        /* MODO NOITE */
         .dark-mode #map { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); }
         .dark-mode .progress-panel { background: #222 !important; color: white !important; border-left-color: #bb86fc !important; }
         .dark-mode .next-text { color: #bbb !important; }
@@ -45,7 +44,6 @@
             cursor: pointer; width: 85%; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* Ajuste para os textos das estações no Popup */
         .leaflet-popup-content { font-size: 14px; line-height: 1.5; }
         .station-popup { max-height: 300px; overflow-y: auto; padding-right: 5px; }
     </style>
@@ -54,7 +52,7 @@
 
     <div class="progress-panel" id="p-panel">
         <div class="dist-info" id="dist-text">📍 Via-Sacra Digital</div>
-        <div class="next-text" id="next-text">Clique no botão abaixo para iniciar o GPS</div>
+        <div class="next-text" id="next-text">Clique abaixo para iniciar o percurso</div>
     </div>
 
     <div class="controls">
@@ -67,7 +65,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Inicialização do Mapa
+        // Inicialização do Mapa centrada no Viso
         var map = L.map('map', { zoomControl: false }).setView([41.17558, -8.63293], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
@@ -80,15 +78,15 @@
             .then(r => r.json())
             .then(data => {
                 L.geoJSON(data, {
-                    style: { color: '#4285F4', weight: 5, opacity: 0.5 },
+                    style: function(f) {
+                        return { color: '#4285F4', weight: 5, opacity: 0.6 };
+                    },
                     pointToLayer: function(f, latlng) {
-                        // Guardar para o sistema de guia
                         stations.push({ 
                             latlng: latlng, 
                             nome: f.properties.nome 
                         });
 
-                        // Criar o ícone circular com o número
                         var label = f.properties.nome.replace(/\D/g, "");
                         var icon = L.divIcon({ 
                             className: 'number-icon', 
@@ -96,7 +94,6 @@
                             iconSize: [28, 28] 
                         });
 
-                        // Balão de informação (Popup) com o texto completo
                         var popupContent = `<div class="station-popup">
                             <h3 style="margin-top:0; color:#4285F4;">${f.properties.nome}</h3>
                             ${f.properties.texto}
@@ -106,26 +103,27 @@
                     }
                 }).addTo(map);
 
-                // Ordenar estações pela ordem numérica (1, 2, 3...)
                 stations.sort((a, b) => {
                     return parseInt(a.nome.replace(/\D/g, "")) - parseInt(b.nome.replace(/\D/g, ""));
                 });
             })
-            .catch(err => alert("Erro ao carregar ficheiro rota.geojson. Verifique se o ficheiro existe na pasta."));
+            .catch(err => console.log("A carregar rota..."));
 
         function ativarGPS() {
             document.getElementById('startBtn').style.display = 'none';
             document.getElementById('dist-text').innerHTML = "⏳ A ligar GPS...";
             
+            // Tenta obter a posição uma vez primeiro para forçar a permissão do browser
             map.locate({ 
                 setView: true, 
                 watch: true, 
-                enableHighAccuracy: true 
+                enableHighAccuracy: true,
+                timeout: 15000, // Dá 15 segundos para o GPS responder
+                maximumAge: 0
             });
         }
 
         map.on('locationfound', function(e) {
-            // Desenhar ou mover o ponto do utilizador
             if (!userMarker) {
                 userMarker = L.circleMarker(e.latlng, { 
                     radius: 10, color: 'white', fillColor: '#4285F4', fillOpacity: 1, weight: 3 
@@ -134,21 +132,18 @@
                 userMarker.setLatLng(e.latlng);
             }
 
-            // Manter o mapa centrado no utilizador
-            map.flyTo(e.latlng, 17, { animate: true });
+            map.flyTo(e.latlng, 17);
 
-            // Lógica de distância para a próxima estação
             if (stations.length > 0) {
                 var target = stations[currentTargetIndex];
                 var dist = e.latlng.distanceTo(target.latlng);
                 var panel = document.getElementById('p-panel');
 
-                if (dist < 25) { // Se estiver a menos de 25 metros
+                if (dist < 25) { 
                     document.getElementById('dist-text').innerHTML = "📍 CHEGOU À " + target.nome;
-                    document.getElementById('next-text').innerHTML = "Toque no número azul para ler a meditação.";
+                    document.getElementById('next-text').innerHTML = "Toque no número no mapa para meditar.";
                     panel.classList.add('arrived');
 
-                    // Avança para a próxima estação após 40 segundos se estiver muito perto
                     if (dist < 12 && currentTargetIndex < stations.length - 1) {
                         setTimeout(() => {
                             if(panel.classList.contains('arrived')) {
@@ -165,8 +160,11 @@
             }
         });
 
-        map.on('locationerror', function() {
-            alert("Não conseguimos aceder à sua localização. Ative o GPS do telemóvel e dê permissão ao navegador.");
+        map.on('locationerror', function(e) {
+            console.error(e.message);
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('dist-text').innerHTML = "❌ Erro no GPS";
+            alert("O GPS demorou a responder. Por favor, certifique-se que está na rua ou perto de uma janela e que permitiu a localização no navegador.");
         });
     </script>
 </body>
