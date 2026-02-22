@@ -10,13 +10,22 @@
         body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #eee; }
         #map { height: 100vh; width: 100vw; z-index: 1; }
 
-        /* Painel Superior */
+        /* Painel Superior Central */
         .progress-panel {
-            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
-            width: fit-content; min-width: 180px; background: rgba(255, 255, 255, 0.95); 
-            padding: 10px 20px; border-radius: 25px; z-index: 1000; 
+            position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+            width: fit-content; min-width: 160px; background: rgba(255, 255, 255, 0.95); 
+            padding: 8px 15px; border-radius: 25px; z-index: 1000; 
             border: 2px solid var(--dourado); box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             text-align: center; font-weight: bold; color: var(--roxo);
+            white-space: nowrap; pointer-events: none;
+        }
+
+        /* Seletor Noite/Dia Alinhado ao Título */
+        .leaflet-top.leaflet-right { top: 6px !important; } 
+        .leaflet-control-layers { 
+            border-radius: 12px !important; 
+            border: 2px solid var(--roxo) !important; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2) !important;
         }
 
         /* Botão GPS */
@@ -27,7 +36,7 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.4); cursor: pointer; text-transform: uppercase;
         }
 
-        /* Ícones do Mapa */
+        /* Ícones das Estações */
         .number-icon {
             background: var(--roxo); border: 2px solid var(--dourado); border-radius: 50%;
             color: white; font-weight: bold; text-align: center; line-height: 28px; font-size: 14px;
@@ -35,12 +44,11 @@
 
         /* Painel de Leitura */
         .info-panel {
-            position: absolute; bottom: -100%; left: 0; width: 100%; height: 60vh; 
+            position: absolute; bottom: -100%; left: 0; width: 100%; height: 65vh; 
             background: white; z-index: 2000; transition: bottom 0.4s ease;
             border-top: 6px solid var(--roxo); border-top-left-radius: 25px; border-top-right-radius: 25px;
             box-shadow: 0 -5px 25px rgba(0,0,0,0.3); display: flex; flex-direction: column;
         }
-
         .info-panel.active { bottom: 0; }
 
         .info-header {
@@ -48,8 +56,7 @@
             justify-content: space-between; align-items: center; background: #f9f9f9;
             border-top-left-radius: 20px; border-top-right-radius: 20px; flex-shrink: 0;
         }
-
-        .info-header h2 { margin: 0; color: var(--roxo); font-size: 1.2rem; }
+        .info-header h2 { margin: 0; color: var(--roxo); font-size: 1.1rem; }
 
         .close-btn {
             background: var(--roxo); border: none; font-size: 1.2rem; font-weight: bold;
@@ -57,15 +64,11 @@
         }
 
         .info-content {
-            padding: 20px 25px 40px 25px; overflow-y: auto; flex-grow: 1; 
+            padding: 20px 25px 50px 25px; overflow-y: auto; flex-grow: 1; 
             line-height: 1.6; color: #333; -webkit-overflow-scrolling: touch;
         }
-
-        .info-content h3 { color: var(--roxo); margin-top: 0; border-bottom: 2px solid var(--dourado); display: block; padding-bottom: 5px; }
-        .info-content b { color: var(--roxo); display: block; margin-top: 15px; }
-
-        /* Ajuste do Seletor de Camadas para Telemóvel */
-        .leaflet-control-layers { border-radius: 10px !important; border: 2px solid var(--roxo) !important; margin-top: 70px !important; }
+        .info-content h3 { color: var(--roxo); margin: 0; padding-bottom: 10px; border-bottom: 2px solid var(--dourado); }
+        .info-content b { color: var(--roxo); display: block; margin-top: 20px; font-size: 1.1rem; }
     </style>
 </head>
 <body>
@@ -85,20 +88,16 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // 1. Configurar camadas de mapa
+        // Camadas de Mapa
         var mapaDia = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
         var mapaNoite = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
 
-        // 2. Inicializar o mapa
-        var map = L.map('map', { 
-            zoomControl: false, 
-            attributionControl: false,
-            layers: [mapaDia] 
-        }).setView([41.17558, -8.63293], 16);
+        // Inicializar Mapa
+        var map = L.map('map', { zoomControl: false, attributionControl: false, layers: [mapaDia] }).setView([41.17558, -8.63293], 16);
 
-        // 3. Adicionar seletor de modo Dia/Noite
+        // Seletor de Camadas (Topo Direito)
         var mapasBase = { "Modo Dia": mapaDia, "Modo Noite": mapaNoite };
-        L.control.layers(mapasBase, null, { position: 'topright', collapsed: true }).addTo(map);
+        L.control.layers(mapasBase, null, { position: 'topright' }).addTo(map);
 
         var userMarker;
         var geojsonLayer;
@@ -134,14 +133,14 @@
         function fecharPainel() { document.getElementById('infoPanel').classList.remove('active'); }
 
         function ativarGPS() {
-            document.getElementById('startBtn').innerText = "A ligar GPS...";
+            document.getElementById('startBtn').innerText = "A procurar sinal...";
             map.locate({ setView: true, watch: true, enableHighAccuracy: true, maxZoom: 17 });
         }
 
         map.on('locationfound', function(e) {
             document.getElementById('startBtn').style.display = 'none';
             if (!userMarker) {
-                userMarker = L.circleMarker(e.latlng, { radius: 8, color: 'white', fillColor: '#007AFF', fillOpacity: 1, weight: 3 }).addTo(map);
+                userMarker = L.circleMarker(e.latlng, { radius: 9, color: 'white', fillColor: '#007AFF', fillOpacity: 1, weight: 3 }).addTo(map);
             } else { userMarker.setLatLng(e.latlng); }
         });
 
