@@ -10,7 +10,7 @@
         body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #eee; }
         #map { height: 100vh; width: 100vw; z-index: 1; }
 
-        /* Painel Superior Central */
+        /* Título Superior */
         .progress-panel {
             position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
             width: fit-content; min-width: 160px; background: rgba(255, 255, 255, 0.95); 
@@ -88,14 +88,11 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Camadas de Mapa
         var mapaDia = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
         var mapaNoite = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
 
-        // Inicializar Mapa
         var map = L.map('map', { zoomControl: false, attributionControl: false, layers: [mapaDia] }).setView([41.17558, -8.63293], 16);
 
-        // Seletor de Camadas (Topo Direito)
         var mapasBase = { "Modo Dia": mapaDia, "Modo Noite": mapaNoite };
         L.control.layers(mapasBase, null, { position: 'topright' }).addTo(map);
 
@@ -131,9 +128,8 @@
         }
 
         function fecharPainel() { document.getElementById('infoPanel').classList.remove('active'); }
-
         function ativarGPS() {
-            document.getElementById('startBtn').innerText = "A procurar sinal...";
+            document.getElementById('startBtn').innerText = "A ligar GPS...";
             map.locate({ setView: true, watch: true, enableHighAccuracy: true, maxZoom: 17 });
         }
 
