@@ -18,7 +18,7 @@
           [-8.64191, 41.17774],
           [-8.642676, 41.177983],
           [-8.645350, 41.178556],
-          [-8.64430, 41.17863],
+          [-8.644673, 41.179087],
           [-8.64580, 41.17988],
           [-8.64602, 41.18102],
           [-8.64733, 41.18077],
@@ -120,7 +120,7 @@
         "nome": "12ª Estação",
         "texto": "<h3>12. JESUS MORRE NA CRUZ</h3>Jesus, estás de braços estendidos como quem abraça todo o mundo. As mãos presas, sustentando o corpo morto, entregam ao Pai o espírito que nunca deixou de viver. No entanto, os seus inimigos, cantam vitoriosos ao vê-lo imobilizado na cruz, completamente derrotado. Aparentemente a sua missão fracassou.<br><br><b>PRECE</b><br>Meu Deus, Tu que Te revelas justamente quando tudo parece fracasso e ausência, concede-me o Teu Espírito Santo para anunciar, mesmo que o mundo teime em Te renegar, que continuas de braços abertos e de coração a palpitar por cada um de nós."
       },
-      "geometry": { "type": "Point", "coordinates": [-8.64430, 41.17863] }
+      "geometry": { "type": "Point", "coordinates": [-8.644673, 41.179087] }
     },
     {
       "type": "Feature",
