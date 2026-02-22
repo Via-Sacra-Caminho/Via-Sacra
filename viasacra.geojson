@@ -10,8 +10,8 @@
           [-8.63293, 41.17558], [-8.63472, 41.17597], [-8.63766, 41.17552],
           [-8.63745, 41.17480], [-8.63741, 41.17361], [-8.63913, 41.17316],
           [-8.64066, 41.17388], [-8.64088, 41.17683], [-8.64191, 41.17774],
-          [-8.642676, 41.177983], [-8.64535, 41.178556], [-8.64433, 41.17872],
-          [-8.6458, 41.17988], [-8.64602, 41.18102], [-8.64733, 41.18077], [-8.64756, 41.18042]
+          [-8.64267, 41.17798], [-8.64535, 41.17855], [-8.64433, 41.17872],
+          [-8.64580, 41.17988], [-8.64602, 41.18102], [-8.64756, 41.18042]
         ]
       }
     },
@@ -93,7 +93,7 @@
         "nome": "10ª Estação",
         "texto": "<h3>10. JESUS É DESPOJADO</h3><br>O cortejo do condenado chega ao calvário. Enquanto se ultimam os preparativos para a crucifixão, os soldados tiram, com brutalidade, as vestes de Jesus. Alí, à vista de toda a gente... Depois, divertem-se sorteando entre eles as suas roupas.<br><br><b>PRECE</b><br>Senhor Jesus, que aceitaste ser despojado de tudo, tem compaixão da minha dureza de coração. Ser cristão é escolher não humilhar, não expor, não usar ninguém, mas defender a dignidade de cada pessoa, como se fosse o próprio Cristo. Ajuda-me a renunciar ao orgulho e à tentação da superioridade. Ensina-me a revestir os meus irmãos com respeito, ternura e justiça."
       },
-      "geometry": { "type": "Point", "coordinates": [-8.642676, 41.177983] }
+      "geometry": { "type": "Point", "coordinates": [-8.64267, 41.17798] }
     },
     {
       "type": "Feature",
@@ -101,7 +101,7 @@
         "nome": "11ª Estação",
         "texto": "<h3>11. JESUS É PREGADO NA CRUZ</h3><br>Chega a hora. Obedecendo à vontade do Pai, Jesus, caminha serenamente. Estende-se sobre a sua cruz, e cravam-lhe pregos nas mãos e nos pés…<br><br><b>PRECE</b><br>Senhor Jesus, não quero mais ser esse carrasco. Dá-me forças para me libertar de tudo o que, nas minhas atitudes, fere e crucifica os meus irmãos. Perdoa o mal que faço com a minha violência e crueldade. Toca o coração de todos aqueles que eu magoo, e faz-lhes sentir a doçura da Tua presença."
       },
-      "geometry": { "type": "Point", "coordinates": [-8.64535, 41.178556] }
+      "geometry": { "type": "Point", "coordinates": [-8.64535, 41.17855] }
     },
     {
       "type": "Feature",
@@ -117,7 +117,7 @@
         "nome": "13ª Estação",
         "texto": "<h3>13. JESUS É DESCIDO DA CRUZ</h3><br>Descido da cruz por um grupo de amigos, o corpo de Jesus é deposto nos braços de Maria. Ela, que O tinha tomado nos braços no momento do nascimento, acompanhado nos caminhos da vida, não O abandona no caminho da morte... retoma-O nos seus braços.<br><br><b>PRECE</b><br>Senhor, que Te consagre sempre as minhas dores, medos e tribulações, porque acredito que não me abandonas. Dá-me a graça de revigorar as minhas forças olhando Tua MÃE, a VIRGEM do SIM, e como Ela dizer sempre: «Faça-se ó Pai, a Tua vontade»."
       },
-      "geometry": { "type": "Point", "coordinates": [-8.6458, 41.17988] }
+      "geometry": { "type": "Point", "coordinates": [-8.64580, 41.17988] }
     },
     {
       "type": "Feature",
