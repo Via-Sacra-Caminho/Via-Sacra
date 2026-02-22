@@ -7,11 +7,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root { --roxo: #6A0DAD; --dourado: #FFD700; }
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; overflow: hidden; background: #eee; }
-        
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #eee; }
         #map { height: 100vh; width: 100vw; z-index: 1; }
 
-        /* Barra Superior */
+        /* Painel Superior */
         .progress-panel {
             position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
             width: fit-content; min-width: 180px; background: rgba(255, 255, 255, 0.95); 
@@ -20,7 +19,7 @@
             text-align: center; font-weight: bold; color: var(--roxo);
         }
 
-        /* Botão Iniciar GPS */
+        /* Botão GPS */
         .btn-start {
             position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
             z-index: 1000; padding: 16px 40px; background: var(--roxo); color: white;
@@ -28,17 +27,16 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.4); cursor: pointer; text-transform: uppercase;
         }
 
-        /* Ícones das Estações */
+        /* Ícones do Mapa */
         .number-icon {
             background: var(--roxo); border: 2px solid var(--dourado); border-radius: 50%;
-            color: white; font-weight: bold; text-align: center;
-            line-height: 28px; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            color: white; font-weight: bold; text-align: center; line-height: 28px; font-size: 14px;
         }
 
-        /* PAINEL DE LEITURA (Aparece ao clicar na estação) */
+        /* Painel de Leitura */
         .info-panel {
-            position: absolute; bottom: -100%; left: 0; width: 100%; height: 55vh; 
-            background: white; z-index: 2000; transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: absolute; bottom: -100%; left: 0; width: 100%; height: 60vh; 
+            background: white; z-index: 2000; transition: bottom 0.4s ease;
             border-top: 6px solid var(--roxo); border-top-left-radius: 25px; border-top-right-radius: 25px;
             box-shadow: 0 -5px 25px rgba(0,0,0,0.3); display: flex; flex-direction: column;
         }
@@ -48,7 +46,7 @@
         .info-header {
             padding: 15px 20px; border-bottom: 1px solid #eee; display: flex;
             justify-content: space-between; align-items: center; background: #f9f9f9;
-            border-top-left-radius: 20px; border-top-right-radius: 20px;
+            border-top-left-radius: 20px; border-top-right-radius: 20px; flex-shrink: 0;
         }
 
         .info-header h2 { margin: 0; color: var(--roxo); font-size: 1.2rem; }
@@ -59,18 +57,20 @@
         }
 
         .info-content {
-            padding: 20px; overflow-y: auto; flex-grow: 1; line-height: 1.6; color: #333;
-            -webkit-overflow-scrolling: touch;
+            padding: 20px 25px 40px 25px; overflow-y: auto; flex-grow: 1; 
+            line-height: 1.6; color: #333; -webkit-overflow-scrolling: touch;
         }
 
-        .info-content h3 { color: var(--roxo); margin-top: 0; border-bottom: 2px solid var(--dourado); display: inline-block; }
+        .info-content h3 { color: var(--roxo); margin-top: 0; border-bottom: 2px solid var(--dourado); display: block; padding-bottom: 5px; }
         .info-content b { color: var(--roxo); display: block; margin-top: 15px; }
+
+        /* Ajuste do Seletor de Camadas para Telemóvel */
+        .leaflet-control-layers { border-radius: 10px !important; border: 2px solid var(--roxo) !important; margin-top: 70px !important; }
     </style>
 </head>
 <body>
 
     <div class="progress-panel">Via-Sacra Digital</div>
-
     <button class="btn-start" id="startBtn" onclick="ativarGPS()">Iniciar Caminhada</button>
 
     <div id="infoPanel" class="info-panel">
@@ -85,79 +85,67 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Inicialização do Mapa
-        var map = L.map('map', { zoomControl: false, attributionControl: false }).setView([41.17558, -8.63293], 16);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+        // 1. Configurar camadas de mapa
+        var mapaDia = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
+        var mapaNoite = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
+
+        // 2. Inicializar o mapa
+        var map = L.map('map', { 
+            zoomControl: false, 
+            attributionControl: false,
+            layers: [mapaDia] 
+        }).setView([41.17558, -8.63293], 16);
+
+        // 3. Adicionar seletor de modo Dia/Noite
+        var mapasBase = { "Modo Dia": mapaDia, "Modo Noite": mapaNoite };
+        L.control.layers(mapasBase, null, { position: 'topright', collapsed: true }).addTo(map);
 
         var userMarker;
         var geojsonLayer;
 
-        // Função para carregar os dados (com truque para evitar cache)
         function carregarDados() {
             fetch('viasacra.geojson?v=' + new Date().getTime())
-                .then(response => {
-                    if (!response.ok) throw new Error("Erro ao carregar ficheiro");
-                    return response.json();
-                })
+                .then(r => r.json())
                 .then(data => {
                     if (geojsonLayer) map.removeLayer(geojsonLayer);
-                    
                     geojsonLayer = L.geoJSON(data, {
                         style: { color: '#6A0DAD', weight: 5, dashArray: '8, 12', opacity: 0.6 },
-                        pointToLayer: function(feature, latlng) {
-                            var num = feature.properties.nome.match(/\d+/) || ["?"];
-                            var icon = L.divIcon({ 
-                                className: 'number-icon', 
-                                html: num[0], 
-                                iconSize: [30, 30] 
-                            });
+                        pointToLayer: function(f, latlng) {
+                            var match = f.properties.nome.match(/\d+/);
+                            var num = match ? match[0] : "?";
+                            var icon = L.divIcon({ className: 'number-icon', html: num, iconSize: [30, 30] });
                             return L.marker(latlng, { icon: icon });
                         }
                     }).addTo(map);
 
-                    // Adicionar evento de clique em cada ponto
                     geojsonLayer.eachLayer(function(layer) {
                         if (layer.feature.geometry.type === "Point") {
                             layer.on('click', function() {
-                                abrirPainel(layer.feature.properties.nome, layer.feature.properties.texto);
+                                document.getElementById('panelTitle').innerText = layer.feature.properties.nome;
+                                document.getElementById('infoConteudo').innerHTML = layer.feature.properties.texto;
+                                document.getElementById('infoPanel').classList.add('active');
+                                document.getElementById('infoConteudo').scrollTop = 0;
                             });
                         }
                     });
-                })
-                .catch(err => console.error("Erro:", err));
+                });
         }
 
-        function abrirPainel(titulo, texto) {
-            document.getElementById('panelTitle').innerText = titulo;
-            document.getElementById('infoConteudo').innerHTML = texto;
-            document.getElementById('infoPanel').classList.add('active');
-        }
-
-        function fecharPainel() {
-            document.getElementById('infoPanel').classList.remove('active');
-        }
+        function fecharPainel() { document.getElementById('infoPanel').classList.remove('active'); }
 
         function ativarGPS() {
-            document.getElementById('startBtn').innerText = "A procurar sinal...";
+            document.getElementById('startBtn').innerText = "A ligar GPS...";
             map.locate({ setView: true, watch: true, enableHighAccuracy: true, maxZoom: 17 });
         }
 
         map.on('locationfound', function(e) {
             document.getElementById('startBtn').style.display = 'none';
             if (!userMarker) {
-                userMarker = L.circleMarker(e.latlng, {
-                    radius: 8, fillOpacity: 1, color: 'white', fillColor: '#007AFF', weight: 3
-                }).addTo(map);
-            } else { 
-                userMarker.setLatLng(e.latlng); 
-            }
+                userMarker = L.circleMarker(e.latlng, { radius: 8, color: 'white', fillColor: '#007AFF', fillOpacity: 1, weight: 3 }).addTo(map);
+            } else { userMarker.setLatLng(e.latlng); }
         });
 
-        // Fechar painel se clicar no mapa vazio
-        map.on('click', function() { fecharPainel(); });
-
-        // Carregar as paragens logo ao abrir
+        map.on('click', fecharPainel);
         carregarDados();
     </script>
 </body>
