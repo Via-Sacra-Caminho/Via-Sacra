@@ -7,57 +7,88 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root { --roxo: #6A0DAD; --dourado: #FFD700; }
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
-        #map { height: 100vh; width: 100vw; background: #eee; }
-
-        /* AJUSTE NA BARRA: Agora ela encolhe e fica centrada */
-        .progress-panel {
-            position: absolute; 
-            top: 15px; 
-            left: 50%; 
-            transform: translateX(-50%); /* Centraliza a barra */
-            width: fit-content; /* Largura ajustada ao texto */
-            min-width: 120px;
-            background: rgba(255, 255, 255, 0.95); 
-            padding: 8px 20px; 
-            border-radius: 25px; /* Mais arredondada para parecer um botão/pílula */
-            z-index: 1000; 
-            border: 2px solid var(--dourado); 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; overflow: hidden; background: #eee; }
         
-        .dist-info { font-size: 18px; font-weight: bold; color: var(--roxo); text-align: center; }
+        #map { height: 100vh; width: 100vw; z-index: 1; }
 
-        .number-icon {
-            background: var(--roxo); border: 2px solid var(--dourado); border-radius: 50%;
-            color: white; font-weight: bold; text-align: center;
-            line-height: 28px; font-size: 14px;
+        /* Barra Superior */
+        .progress-panel {
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+            width: fit-content; min-width: 150px; background: rgba(255, 255, 255, 0.95); 
+            padding: 10px 20px; border-radius: 25px; z-index: 1000; 
+            border: 2px solid var(--dourado); box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            text-align: center; font-weight: bold; color: var(--roxo);
         }
 
+        /* Botão Iniciar */
         .btn-start {
             position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
             z-index: 1000; padding: 16px 40px; background: var(--roxo); color: white;
             border: 2px solid var(--dourado); border-radius: 30px; font-weight: bold;
             box-shadow: 0 5px 20px rgba(0,0,0,0.4); cursor: pointer; text-transform: uppercase;
         }
+
+        /* Ícones das Estações */
+        .number-icon {
+            background: var(--roxo); border: 2px solid var(--dourado); border-radius: 50%;
+            color: white; font-weight: bold; text-align: center;
+            line-height: 28px; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* PAINEL DE INFORMAÇÃO (Solução para o texto longo) */
+        .info-panel {
+            position: absolute; bottom: -100%; left: 0; width: 100%; height: 50vh; 
+            background: white; z-index: 2000; transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border-top: 5px solid var(--roxo); border-top-left-radius: 25px; border-top-right-radius: 25px;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.3); display: flex; flex-direction: column;
+        }
+
+        .info-panel.active { bottom: 0; }
+
+        .info-header {
+            padding: 15px 20px; border-bottom: 1px solid #eee; display: flex;
+            justify-content: space-between; align-items: center; background: #f9f9f9;
+            border-top-left-radius: 20px; border-top-right-radius: 20px;
+        }
+
+        .info-header h2 { margin: 0; color: var(--roxo); font-size: 1.2rem; }
+
+        .close-btn {
+            background: #eee; border: none; font-size: 1.2rem; font-weight: bold;
+            color: #666; width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
+        }
+
+        .info-content {
+            padding: 20px; overflow-y: auto; flex-grow: 1; line-height: 1.6; color: #333;
+            -webkit-overflow-scrolling: touch; /* Scroll suave em iOS */
+        }
+
+        .info-content h3 { color: var(--roxo); margin-top: 0; border-bottom: 2px solid var(--dourado); display: inline-block; }
+        .info-content b { color: var(--roxo); display: block; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="progress-panel">
-        <div class="dist-info">Via-Sacra</div>
-    </div>
+    <div class="progress-panel">Via-Sacra Digital</div>
 
     <button class="btn-start" id="startBtn" onclick="ativarGPS()">Iniciar Caminhada</button>
+
+    <div id="infoPanel" class="info-panel">
+        <div class="info-header">
+            <h2 id="panelTitle">Estação</h2>
+            <button class="close-btn" onclick="fecharPainel()">×</button>
+        </div>
+        <div id="infoConteudo" class="info-content"></div>
+    </div>
 
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // Configuração dos Mapas
         var mapaDia = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
         var mapaNoite = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
 
-        // Ajuste de Zoom equilibrado
         var map = L.map('map', { zoomControl: false, attributionControl: false, layers: [mapaDia] })
                    .setView([41.17558, -8.63293], 16);
 
@@ -65,20 +96,41 @@
 
         var userMarker;
 
-        fetch('rota.geojson?v=' + Date.now())
+        // Carregar Estações e Percurso
+        fetch('viasacra.geojson?v=' + Date.now())
             .then(r => r.json())
             .then(data => {
                 L.geoJSON(data, {
-                    style: { color: '#FFD700', weight: 4, dashArray: '5, 10' },
+                    style: function(f) {
+                        return { color: '#6A0DAD', weight: 5, dashArray: '8, 12', opacity: 0.6 };
+                    },
                     pointToLayer: function(f, latlng) {
                         if (f.geometry.type === "Point") {
-                            var num = f.properties.nome.match(/\d+/)[0];
+                            var match = f.properties.nome.match(/\d+/);
+                            var num = match ? match[0] : "?";
                             var icon = L.divIcon({ className: 'number-icon', html: num, iconSize: [30, 30] });
-                            return L.marker(latlng, { icon: icon }).bindPopup(`<div style="font-size:14px;">${f.properties.texto}</div>`, { maxWidth: 280 });
+                            var marker = L.marker(latlng, { icon: icon });
+                            
+                            // Ação ao clicar: Abrir o Painel Inferior
+                            marker.on('click', function() {
+                                abrirPainel(f.properties.nome, f.properties.texto);
+                            });
+                            
+                            return marker;
                         }
                     }
                 }).addTo(map);
             });
+
+        function abrirPainel(titulo, texto) {
+            document.getElementById('panelTitle').innerText = titulo;
+            document.getElementById('infoConteudo').innerHTML = texto;
+            document.getElementById('infoPanel').classList.add('active');
+        }
+
+        function fecharPainel() {
+            document.getElementById('infoPanel').classList.remove('active');
+        }
 
         function ativarGPS() {
             const btn = document.getElementById('startBtn');
@@ -86,7 +138,6 @@
             map.locate({ setView: true, watch: true, enableHighAccuracy: true, maxZoom: 18 });
         }
 
-        // Seguimento Ativo: O mapa persegue o teu movimento
         map.on('locationfound', function(e) {
             document.getElementById('startBtn').style.display = 'none';
 
@@ -97,12 +148,18 @@
             } else { 
                 userMarker.setLatLng(e.latlng); 
             }
-            map.panTo(e.latlng); // Mantém-te sempre no centro do ecrã
+            // Segue o utilizador mas mantém o painel visível se estiver aberto
+            map.panTo(e.latlng); 
         });
 
         map.on('locationerror', function(e) {
-            alert("Erro: Certifique-se que o GPS está ligado e que permitiu o acesso no navegador.");
+            alert("Ative o GPS para acompanhar o percurso.");
             document.getElementById('startBtn').innerText = "Tentar Novamente";
+        });
+
+        // Fechar painel se clicar no mapa
+        map.on('click', function() {
+            fecharPainel();
         });
     </script>
 </body>
