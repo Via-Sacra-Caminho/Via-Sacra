@@ -38,8 +38,10 @@
         .info-panel.active { bottom: 0; }
 
         .info-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .controls { display: flex; gap: 10px; align-items: center; }
+        .font-btn { background: #f0f0f0; border: 1px solid #ccc; width: 35px; height: 35px; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; }
         .close-btn { background: var(--roxo); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-weight: bold; }
-        .info-content { padding: 20px 25px 50px 25px; overflow-y: auto; height: calc(100% - 70px); line-height: 1.6; }
+        .info-content { padding: 20px 25px 50px 25px; overflow-y: auto; height: calc(100% - 70px); line-height: 1.6; font-size: 18px; }
     </style>
 </head>
 <body>
@@ -49,8 +51,12 @@
 
     <div id="infoPanel" class="info-panel">
         <div class="info-header">
-            <h2 id="panelTitle" style="margin:0; color:var(--roxo);">Estação</h2>
-            <button class="close-btn" onclick="fecharPainel()">×</button>
+            <h2 id="panelTitle" style="margin:0; color:var(--roxo); font-size: 1.2em;">Estação</h2>
+            <div class="controls">
+                <button class="font-btn" onclick="mudarFonte(-2)">A-</button>
+                <button class="font-btn" onclick="mudarFonte(2)">A+</button>
+                <button class="close-btn" onclick="fecharPainel()">×</button>
+            </div>
         </div>
         <div id="infoConteudo" class="info-content"></div>
     </div>
@@ -59,6 +65,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        var currentFontSize = 18;
         var mapaDia = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
         var mapaNoite = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png');
 
@@ -83,6 +90,13 @@
                         }
                     }).addTo(map);
                 });
+        }
+
+        function mudarFonte(delta) {
+            currentFontSize += delta;
+            if (currentFontSize < 14) currentFontSize = 14;
+            if (currentFontSize > 30) currentFontSize = 30;
+            document.getElementById('infoConteudo').style.fontSize = currentFontSize + 'px';
         }
 
         function fecharPainel() { document.getElementById('infoPanel').classList.remove('active'); }
