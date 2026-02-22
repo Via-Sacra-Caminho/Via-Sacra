@@ -17,7 +17,7 @@
           [-8.64088, 41.17683],
           [-8.64191, 41.17774],
           [-8.642676, 41.177983],
-          [-8.64160, 41.17980],
+          [-8.645350, 41.178556],
           [-8.64430, 41.17863],
           [-8.64580, 41.17988],
           [-8.64602, 41.18102],
@@ -112,7 +112,7 @@
         "nome": "11ª Estação",
         "texto": "<h3>11. JESUS É PREGADO NA CRUZ</h3>Chega a hora. Obedecendo à vontade do Pai, Jesus, caminha serenamente. Estende-se sobre a sua cruz, e cravam-lhe pregos nas mãos e nos pés…<br><br><b>PRECE</b><br>Senhor Jesus, não quero mais ser esse carrasco. Dá-me forças para me libertar de tudo o que, nas minhas atitudes, fere e crucifica os meus irmãos. Perdoa o mal que faço com a minha violência e crueldade. Toca o coração de todos aqueles que eu magoo, e faz-lhes sentir a doçura da Tua presença."
       },
-      "geometry": { "type": "Point", "coordinates": [-8.64160, 41.17980] }
+      "geometry": { "type": "Point", "coordinates": [-8.645350, 41.178556] }
     },
     {
       "type": "Feature",
